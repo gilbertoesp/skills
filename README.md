@@ -1,3 +1,11 @@
+---
+name: Skills Library
+description: Reference index for this repository: what each skill enforces, how to install and invoke them, and the supported frontmatter fields. Informational only, not an executable workflow.
+slash: false
+metadata:
+  opencode/autoinvoke: false
+---
+
 # skills
 
 Personal, opinionated skill library for [OpenCode](https://opencode.ai).
@@ -13,9 +21,10 @@ from the file path, not from frontmatter, so `tdd.md` is loaded with
 
 ## Catalog
 
-| Skill                   | ID    | File                 | What it enforces                                                                    |
-| ----------------------- | ----- | -------------------- | ----------------------------------------------------------------------------------- |
-| test driven development | `tdd` | [`tdd.md`](./tdd.md) | Strict Red-Green-Refactor for TypeScript, driven only by pre-agreed test seams     |
+| Skill                   | ID       | File                 | What it enforces                                                                |
+| ----------------------- | -------- | -------------------- | ------------------------------------------------------------------------------- |
+| test driven development | `tdd`    | [`tdd.md`](./tdd.md) | Strict Red-Green-Refactor for TypeScript, driven only by pre-agreed test seams  |
+| Skills Library          | `README` | `README.md`          | Informational index of this repo. Not autoinvoked                              |
 
 ## tdd — test driven development
 
@@ -98,6 +107,9 @@ Use the tdd skill to plan the checkout feature
 
 - One skill per file, named in lowercase kebab-case so the file name and the
   skill ID match.
+- Every file at the source root is a skill, so every file needs frontmatter.
+  Behavioral skills stay advertised; documentation opts out with
+  `metadata.opencode/autoinvoke: false`.
 - The `description` states the trigger and the exclusions, not the
   implementation.
 - The skill file is the single source of truth. This README summarizes and
@@ -121,6 +133,30 @@ never advertised to the model.
 
 OpenCode also accepts the portability fields `license` and `compatibility`, but
 does not interpret them.
+
+### Bounding a skill with frontmatter
+
+Frontmatter is what keeps a skill from bleeding into unrelated tasks. Every
+behavioral skill should declare a `description` that names both its trigger and
+its exclusions, so the model knows when *not* to reach for it.
+
+Informational files such as this README are bounded the other way: they are
+still valid skills, but they are withdrawn from the model's attention and from
+the command catalog.
+
+```yaml
+---
+name: Skills Library
+description: Informational index, not an executable workflow.
+slash: false
+metadata:
+  opencode/autoinvoke: false
+---
+```
+
+`autoinvoke: false` removes the skill from the list offered to the model at
+each step. The skill stays registered and can still be loaded explicitly by ID,
+so nothing is lost by opting out.
 
 See the full reference in the
 [skills documentation](https://opencode.ai/v2/docs/skills/).
